@@ -34,6 +34,17 @@ class Repository(private val dao: CoachingDao) {
     suspend fun deleteRecordsBySessionId(sessionId: Long) = dao.deleteRecordsBySessionId(sessionId)
     suspend fun insertChangeLog(log: AttendanceChangeLogEntity) = dao.insertChangeLog(log)
 
+    // Daily Student Attendance
+    val allDailyAttendance: Flow<List<DailyStudentAttendanceEntity>> = dao.getAllDailyAttendance()
+    fun getDailyAttendanceByBatchAndDate(batchId: Long, date: String): Flow<List<DailyStudentAttendanceEntity>> =
+        dao.getDailyAttendanceByBatchAndDate(batchId, date)
+    fun getDailyAttendanceByStudent(studentId: Long): Flow<List<DailyStudentAttendanceEntity>> =
+        dao.getDailyAttendanceByStudent(studentId)
+    suspend fun insertDailyAttendance(records: List<DailyStudentAttendanceEntity>) =
+        dao.insertDailyAttendance(records)
+    suspend fun deleteDailyAttendanceByBatchAndDate(batchId: Long, date: String) =
+        dao.deleteDailyAttendanceByBatchAndDate(batchId, date)
+
     // Fees
     val allInvoices: Flow<List<FeeInvoiceEntity>> = dao.getAllInvoices()
     fun getInvoicesByStudent(studentId: Long): Flow<List<FeeInvoiceEntity>> = dao.getInvoicesByStudent(studentId)

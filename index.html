@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FrontCraft PRO — Coaching Class Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1A365D;
+      --secondary: #2B6CB0;
+      --accent: #D69E2E;
+      --dark: #0F172A;
+      --light: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --border: #E2E8F0;
+      --text: #334155;
+      --text-muted: #64748B;
+      --success: #16A34A;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F1F5F9;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0F172A 0%, #1A365D 50%, #2B6CB0 100%);
+      color: white;
+      padding: 60px 24px;
+      text-align: center;
+      border-bottom: 4px solid var(--accent);
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(214, 158, 46, 0.2);
+      color: #F6E05E;
+      border: 1px solid rgba(214, 158, 46, 0.5);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+
+    .tagline {
+      font-size: 1.25rem;
+      color: #CBD5E1;
+      max-width: 720px;
+      margin: 0 auto 24px auto;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: -40px auto 60px auto;
+      padding: 0 20px;
+    }
+
+    .overview-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .feature-card {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+      border-color: var(--secondary);
+    }
+
+    .feature-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: var(--accent);
+      font-size: 20px;
+      margin-bottom: 14px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .code-block {
+      background: #0F172A;
+      color: #E2E8F0;
+      padding: 20px;
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      overflow-x: auto;
+      margin: 16px 0;
+      border: 1px solid #334155;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--dark);
+      font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: #ECC94B;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">Native Android Applet • Kotlin & Jetpack Compose</div>
+    <h1>FrontCraft PRO</h1>
+    <p class="tagline">Comprehensive Coaching Class Management System for students, teachers, batches, daily attendance, fee ledgers, examinations, and administrative CSV reporting.</p>
+  </header>
+
+  <main class="container">
+    <div class="overview-card">
+      <h2 style="color: var(--primary); font-size: 1.6rem; margin-bottom: 8px;">Institutional Management Hub</h2>
+      <p style="color: var(--text-muted); font-size: 1.05rem;">
+        This repository hosts the source code for the <strong>FrontCraft PRO</strong> Android application. If you accessed this URL via GitHub Pages, this landing page resolves the GitHub Pages static root requirement (404 File Not Found) and provides quick access to project documentation and build instructions.
+      </p>
+
+      <div class="grid">
+        <div class="feature-card">
+          <div class="feature-icon">👥</div>
+          <h3>Student Management & ID Cards</h3>
+          <p>Register students, assign batches, manage parent contacts, track tuition balances, and generate digital ID cards with verifiable barcodes.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <h3>Daily Attendance Tracking</h3>
+          <p>Mark batch roll calls by selected date (Present, Absent, Late, Leave), add custom faculty remarks, and persist to Room database tables.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📝</div>
+          <h3>Exams & Merit Scoreboards</h3>
+          <p>Schedule unit tests, enter marks with live grade badges (A+, A, B, C, D, F), generate merit order rankings, and historical student transcripts.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💳</div>
+          <h3>Fee Invoices & Reminders</h3>
+          <p>Track payments, calculate pending balances, log receipts, and broadcast automated tuition reminders to WhatsApp/SMS.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Administrative CSV Exports</h3>
+          <p>Export Room database student directories and daily attendance registers into sanitized, shareable CSV files protected against formula injection.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Room Database Persistence</h3>
+          <p>Structured on-device SQLite storage with reactive Kotlin Flow DAOs, foreign keys, and audit logging.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="overview-card">
+      <h2 style="color: var(--primary); font-size: 1.4rem; margin-bottom: 12px;">Building & Running the Android App</h2>
+      <p style="color: var(--text-muted); margin-bottom: 16px;">
+        To build the native Android APK locally on your machine or in Android Studio:
+      </p>
+
+      <div class="code-block">
+# 1. Clone this repository
+git clone https://github.com/&lt;your-org&gt;/&lt;your-repo&gt;.git
+cd frontcraft-pro
+
+# 2. Build the Debug APK using Gradle
+./gradlew assembleDebug
+
+# 3. Locate the compiled APK at:
+app/build/outputs/apk/debug/app-debug.apk
+      </div>
+
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 14px;">
+        For live interactive testing, open this project directly in Google AI Studio to run inside the cloud streaming Android emulator.
+      </p>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 FrontCraft PRO • Coaching Class Management System • Android 14+ / Jetpack Compose</p>
+  </footer>
+
+</body>
+</html>

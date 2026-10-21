@@ -129,6 +129,39 @@ data class AttendanceChangeLogEntity(
 )
 
 @Entity(
+    tableName = "daily_student_attendance",
+    foreignKeys = [
+        ForeignKey(
+            entity = BatchEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["batchId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = StudentEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["studentId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["batchId", "studentId", "attendanceDate"], unique = true),
+        Index(value = ["studentId"]),
+        Index(value = ["batchId", "attendanceDate"])
+    ]
+)
+data class DailyStudentAttendanceEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val batchId: Long,
+    val studentId: Long,
+    val attendanceDate: String, // YYYY-MM-DD
+    val status: String, // PRESENT, ABSENT, LATE, LEAVE
+    val remarks: String = "",
+    val markedBy: String = "Faculty",
+    val recordedAt: String = ""
+)
+
+@Entity(
     tableName = "fee_invoices",
     foreignKeys = [
         ForeignKey(

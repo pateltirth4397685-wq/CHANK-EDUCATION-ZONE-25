@@ -80,6 +80,22 @@ interface CoachingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertChangeLog(log: AttendanceChangeLogEntity)
 
+    // --- Daily Student Attendance ---
+    @Query("SELECT * FROM daily_student_attendance WHERE batchId = :batchId AND attendanceDate = :date")
+    fun getDailyAttendanceByBatchAndDate(batchId: Long, date: String): Flow<List<DailyStudentAttendanceEntity>>
+
+    @Query("SELECT * FROM daily_student_attendance WHERE studentId = :studentId ORDER BY attendanceDate DESC")
+    fun getDailyAttendanceByStudent(studentId: Long): Flow<List<DailyStudentAttendanceEntity>>
+
+    @Query("SELECT * FROM daily_student_attendance ORDER BY attendanceDate DESC")
+    fun getAllDailyAttendance(): Flow<List<DailyStudentAttendanceEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDailyAttendance(records: List<DailyStudentAttendanceEntity>)
+
+    @Query("DELETE FROM daily_student_attendance WHERE batchId = :batchId AND attendanceDate = :date")
+    suspend fun deleteDailyAttendanceByBatchAndDate(batchId: Long, date: String)
+
     // --- Fee Invoices & Payments ---
     @Query("SELECT * FROM fee_invoices ORDER BY id DESC")
     fun getAllInvoices(): Flow<List<FeeInvoiceEntity>>

@@ -38,6 +38,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material.icons.filled.Warning
@@ -81,6 +82,7 @@ import com.example.data.ExaminationEntity
 import com.example.data.ExamResultEntity
 import com.example.data.StudentEntity
 import com.example.ui.FrontCraftViewModel
+import com.example.util.CsvExporter
 import com.example.ui.components.StatsCard
 import com.example.ui.components.StatusBadge
 import com.example.ui.theme.BurgundyAccent
@@ -178,16 +180,39 @@ fun StudentsScreen(
                     )
                 }
 
-                if (currentUser.role == "ADMIN") {
-                    Button(
-                        onClick = { showRegisterDialog = true },
-                        colors = ButtonDefaults.buttonColors(containerColor = GoldAccent),
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    OutlinedButton(
+                        onClick = {
+                            val csv = CsvExporter.generateStudentsCsv(allStudents, allBatches, allInvoices)
+                            val file = CsvExporter.saveAndShareCsv(
+                                context = context,
+                                fileName = "frontcraft_student_directory.csv",
+                                csvContent = csv,
+                                shareTitle = "Share Student Directory CSV"
+                            )
+                            if (file != null) {
+                                Toast.makeText(context, "Exported ${allStudents.size} student records", Toast.LENGTH_SHORT).show()
+                            }
+                        },
                         shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.testTag("add_student_button")
+                        modifier = Modifier.testTag("export_students_csv_button")
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = null, tint = NavyPrimary, modifier = Modifier.size(16.dp))
+                        Icon(Icons.Default.Share, contentDescription = null, modifier = Modifier.size(14.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Register Student", color = NavyPrimary, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        Text("Export CSV", fontSize = 11.sp)
+                    }
+
+                    if (currentUser.role == "ADMIN") {
+                        Button(
+                            onClick = { showRegisterDialog = true },
+                            colors = ButtonDefaults.buttonColors(containerColor = GoldAccent),
+                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier.testTag("add_student_button")
+                        ) {
+                            Icon(Icons.Default.Add, contentDescription = null, tint = NavyPrimary, modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text("Register Student", color = NavyPrimary, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        }
                     }
                 }
             }

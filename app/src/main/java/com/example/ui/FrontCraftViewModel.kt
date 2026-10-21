@@ -95,6 +95,10 @@ class FrontCraftViewModel(application: Application) : AndroidViewModel(applicati
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
+    val allDailyAttendance = repository.allDailyAttendance.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+    )
+
     val allInvoices = repository.allInvoices.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
@@ -411,6 +415,20 @@ class FrontCraftViewModel(application: Application) : AndroidViewModel(applicati
                 )
             }
             repository.insertAttendanceRecords(records)
+
+            val dailyRecords = statusMap.map { (studentId, status) ->
+                com.example.data.DailyStudentAttendanceEntity(
+                    batchId = batchId,
+                    studentId = studentId,
+                    attendanceDate = attendanceDate,
+                    status = status,
+                    remarks = remarksMap[studentId] ?: "",
+                    markedBy = _currentUser.value.fullName,
+                    recordedAt = getCurrentTimestamp()
+                )
+            }
+            repository.deleteDailyAttendanceByBatchAndDate(batchId, attendanceDate)
+            repository.insertDailyAttendance(dailyRecords)
 
             val presentCount = statusMap.values.count { it == "PRESENT" }
             val absentCount = statusMap.values.count { it == "ABSENT" }

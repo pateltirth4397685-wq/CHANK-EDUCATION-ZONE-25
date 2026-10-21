@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
         AttendanceSessionEntity::class,
         AttendanceRecordEntity::class,
         AttendanceChangeLogEntity::class,
+        DailyStudentAttendanceEntity::class,
         FeeInvoiceEntity::class,
         FeePaymentEntity::class,
         ExaminationEntity::class,
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
         AnnouncementEntity::class,
         ActivityLogEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -207,6 +208,14 @@ abstract class AppDatabase : RoomDatabase() {
                     AttendanceRecordEntity(2, 1, 2, "PRESENT", "On time", "Prof. Ramesh Kulkarni"),
                     AttendanceRecordEntity(3, 1, 3, "LATE", "Traffic delay", "Prof. Ramesh Kulkarni"),
                     AttendanceRecordEntity(4, 1, 4, "PRESENT", "On time", "Prof. Ramesh Kulkarni")
+                )
+            )
+            dao.insertDailyAttendance(
+                listOf(
+                    DailyStudentAttendanceEntity(id = 1, batchId = 1, studentId = 1, attendanceDate = "2026-10-17", status = "PRESENT", remarks = "On time", markedBy = "Prof. Ramesh Kulkarni", recordedAt = "2026-10-17 08:30:00"),
+                    DailyStudentAttendanceEntity(id = 2, batchId = 1, studentId = 2, attendanceDate = "2026-10-17", status = "PRESENT", remarks = "On time", markedBy = "Prof. Ramesh Kulkarni", recordedAt = "2026-10-17 08:30:00"),
+                    DailyStudentAttendanceEntity(id = 3, batchId = 1, studentId = 3, attendanceDate = "2026-10-17", status = "LATE", remarks = "Traffic delay", markedBy = "Prof. Ramesh Kulkarni", recordedAt = "2026-10-17 08:30:00"),
+                    DailyStudentAttendanceEntity(id = 4, batchId = 1, studentId = 4, attendanceDate = "2026-10-17", status = "PRESENT", remarks = "On time", markedBy = "Prof. Ramesh Kulkarni", recordedAt = "2026-10-17 08:30:00")
                 )
             )
 

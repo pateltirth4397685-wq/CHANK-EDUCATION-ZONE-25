@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -69,7 +70,9 @@ import androidx.compose.ui.unit.sp
 import com.example.data.AttendanceRecordEntity
 import com.example.data.AttendanceSessionEntity
 import com.example.data.BatchEntity
+import com.example.data.DailyStudentAttendanceEntity
 import com.example.ui.FrontCraftViewModel
+import com.example.util.CsvExporter
 import com.example.ui.components.StatsCard
 import com.example.ui.theme.BurgundyAccent
 import com.example.ui.theme.GoldAccent
@@ -91,6 +94,7 @@ fun AttendanceScreen(
     val allStudents by viewModel.allStudents.collectAsState()
     val allSessions by viewModel.allAttendanceSessions.collectAsState()
     val allRecords by viewModel.allAttendanceRecords.collectAsState()
+    val allDailyAttendance by viewModel.allDailyAttendance.collectAsState()
     val currentUser by viewModel.currentUser.collectAsState()
 
     val dateFormat = remember { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) }
@@ -118,15 +122,25 @@ fun AttendanceScreen(
     }
 
     // When batch or date changes, check if attendance was already recorded in database
-    LaunchedEffect(selectedBatchId, attendanceDate, allSessions, allRecords) {
-        val existingSession = allSessions.find { it.batchId == selectedBatchId && it.attendanceDate == attendanceDate }
-        if (existingSession != null) {
-            sessionSubject = existingSession.subject
-            val recordsForSession = allRecords.filter { it.sessionId == existingSession.id }
-            recordsForSession.forEach { r ->
+    LaunchedEffect(selectedBatchId, attendanceDate, allSessions, allRecords, allDailyAttendance) {
+        val existingDaily = allDailyAttendance.filter { it.batchId == selectedBatchId && it.attendanceDate == attendanceDate }
+        if (existingDaily.isNotEmpty()) {
+            existingDaily.forEach { r ->
                 attendanceStatusMap[r.studentId] = r.status
                 if (r.remarks.isNotBlank()) {
                     remarksMap[r.studentId] = r.remarks
+                }
+            }
+        } else {
+            val existingSession = allSessions.find { it.batchId == selectedBatchId && it.attendanceDate == attendanceDate }
+            if (existingSession != null) {
+                sessionSubject = existingSession.subject
+                val recordsForSession = allRecords.filter { it.sessionId == existingSession.id }
+                recordsForSession.forEach { r ->
+                    attendanceStatusMap[r.studentId] = r.status
+                    if (r.remarks.isNotBlank()) {
+                        remarksMap[r.studentId] = r.remarks
+                    }
                 }
             }
         }
@@ -149,7 +163,8 @@ fun AttendanceScreen(
     val lateCount = currentBatchStudents.count { attendanceStatusMap[it.id] == "LATE" }
     val leaveCount = currentBatchStudents.count { attendanceStatusMap[it.id] == "LEAVE" }
     val attendanceRate = if (totalCount > 0) (presentCount.toFloat() / totalCount) else 0f
-    val isSessionAlreadyRecorded = allSessions.any { it.batchId == selectedBatchId && it.attendanceDate == attendanceDate }
+    val isSessionAlreadyRecorded = allDailyAttendance.any { it.batchId == selectedBatchId && it.attendanceDate == attendanceDate } ||
+            allSessions.any { it.batchId == selectedBatchId && it.attendanceDate == attendanceDate }
 
     val filteredStudents = currentBatchStudents.filter { st ->
         st.fullName.contains(searchQuery, ignoreCase = true) ||
@@ -194,7 +209,41 @@ fun AttendanceScreen(
                 )
             }
 
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                OutlinedButton(
+                    onClick = {
+                        val bName = currentBatch?.batchName?.replace(" ", "_") ?: "batch"
+                        val batchRecords = allDailyAttendance.filter { it.batchId == selectedBatchId }
+                        val recordsToExport = if (batchRecords.isNotEmpty()) {
+                            batchRecords
+                        } else {
+                            currentBatchStudents.map { st ->
+                                DailyStudentAttendanceEntity(
+                                    batchId = selectedBatchId ?: 1L,
+                                    studentId = st.id,
+                                    attendanceDate = attendanceDate,
+                                    status = attendanceStatusMap[st.id] ?: "PRESENT",
+                                    remarks = remarksMap[st.id] ?: "",
+                                    markedBy = currentUser.fullName,
+                                    recordedAt = todayDate
+                                )
+                            }
+                        }
+                        val csv = CsvExporter.generateAttendanceCsv(recordsToExport, allStudents, allBatches)
+                        val fileName = "attendance_${bName}_$attendanceDate.csv"
+                        val file = CsvExporter.saveAndShareCsv(context, fileName, csv, "Share Batch Attendance CSV")
+                        if (file != null) {
+                            Toast.makeText(context, "Exported $fileName", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.testTag("export_attendance_csv_button")
+                ) {
+                    Icon(Icons.Default.Share, contentDescription = null, modifier = Modifier.size(14.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Export CSV", fontSize = 11.sp)
+                }
+
                 OutlinedButton(
                     onClick = { showHistoryDialog = true },
                     shape = RoundedCornerShape(8.dp),
