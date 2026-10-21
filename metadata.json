@@ -1,0 +1,6 @@
+{
+  "name": "FrontCraft PRO",
+  "description": "FrontCraft PRO Coaching Class Management System for students, teachers, batches, attendance, fees, exams, and reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
